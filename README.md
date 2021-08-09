@@ -22,8 +22,10 @@ window.consentManager = new ConsentManager({
 ```
 
 ## Consent Layer Options
+```javascript
 <button onclick="consentManager.show()">Show Consent Layer</button>
 <button onclick="consentManager.reset()">Delet Consent Cookies</button>
+```
 
 ## Get Users Consent Status
 'marketing' is the Consentfields name
