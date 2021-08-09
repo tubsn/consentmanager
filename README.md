@@ -2,6 +2,7 @@
 Small Javascript Library for DSGVO - Consent Management
 
 ## Start and Options
+```javascript
 window.consentManager = new ConsentManager({
 	cookieName : 'consentCookie',
 	cookieExpireDays : 365,
@@ -18,6 +19,7 @@ window.consentManager = new ConsentManager({
 
 	details: '<small>Read more in our <a target"_blank" href="/datapolicy">Datapolicy</a></small>'
 });
+```
 
 ## Consent Layer Options
 <button onclick="consentManager.show()">Show Consent Layer</button>
@@ -25,8 +27,10 @@ window.consentManager = new ConsentManager({
 
 ## Get Users Consent Status
 'marketing' is the Consentfields name
+```javascript
 <script>
 if (consentManager.status('marketing')) {
   // Your Marketing Code here	
 }
 </script>
+```
