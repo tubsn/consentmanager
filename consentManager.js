@@ -18,8 +18,9 @@ class ConsentManager {
 		this.consentButtonText = settings.buttonText || 'Auswahl speichern';
 
 		let defaultFields = [
-			{name: 'marketing', label: 'Marketingdaten - <i>Helfen Sie uns relevantere Angebote zu erstellen</i>'},
-			{name: 'tracking', label: 'Nutzerdaten Analyse - <i>Wir möchten lernen, was Sie bei uns interessiert</i>'},
+			{name: 'marketing', label: '<b>Marketingdaten</b> <small>helfen uns dabei, für Sie relevante Angebote zu erstellen</small>'},
+			{name: 'tracking', label: '<b>Nutzerdaten</b> <small> - mit unseren Analysetools lernen wir, wie Sie unsere Webseite nutzen.</small>'},
+			{name: 'basic',	label: '<b>Grundfunktionen</b><small> - Technisch notwendige Cookies stellen Basisfunktionen wie den Login unserer Webseite bereit. Ohne diese Cookies funktioniert diese Webseite nicht.</small>', mandatory : true},
 		]
 
 		this.consentFields = settings.fields || defaultFields;
@@ -118,6 +119,7 @@ class ConsentManager {
 		fields.forEach((field) => {
 
 			let checked = this.status(field.name);
+			
 			if (this.firstLaunch) {checked = true;}
 			if (field.mandatory) {checked = true;}
 
@@ -139,11 +141,10 @@ class ConsentManager {
 	styles() {
 
 		return `
-
 			<style>
 			.consent-wrapper {position:fixed; top:0; left:0; z-index:99999; display:grid; width:100vw; height:100vh; background-color:rgba(0,0,0,0.5);}
 			.consent-modal {align-self: center; justify-self: center; background-color:#f6f6f6;
-				border: 0.2em solid white; padding:1.5em 2em; max-width:800px; width:70%; border-radius:0.5em;
+				border: 0.2em solid white; padding:1.5em 2em; max-width:720px; width:70%; border-radius:0.5em;
 				box-shadow: .5em .5em .7em .3em rgba(0,0,0,0.4);
 			}
 
@@ -154,12 +155,14 @@ class ConsentManager {
 			.consent-dialog-buttons button:hover {background:#2b4c82}
 
 			.consent-form {margin-bottom:1em; display:flex; flex-direction:column; align-items: start;
-			background: #dbdbdb; padding: 0.3em 1em 1em 1em; border-radius: .3em;}
-			.consent-form label {cursor:pointer; font-size: 1em;}
+			background: #dbdbdb; border-radius: .3em;}
+			.consent-form label {cursor:pointer; font-size: 1em; box-sizing: border-box; width:100%; border-bottom: 1px solid #f6f6f6; padding:0 1em .9em 3em; border-radius:.3em;}
+			.consent-form label:hover {background-color:#cfd3dd;}
+			.consent-form label:last-of-type{border-bottom: none;}
 
 			.consent-checkbox {
 			appearance: none; position: relative; display: inline-block !important; outline: none;
-			top: .55em; height: 1.3em; width: 1.3em !important; margin-right: .5em; font-size:1em;
+			top: .55em; height: 1.3em; width: 1.3em !important; margin-right: .5em; margin-left:-2em; font-size:1em;
 			border: .14em solid rgba(117, 129, 151, 0.48); border-radius:0.2em; color: #ffffff; cursor: pointer;
 			 transition: all 0.15s ease-out 0s;}
 
@@ -184,6 +187,7 @@ class ConsentManager {
 			.consent-mandatory .consent-checkbox, .consent-mandatory {cursor:default !important;}
 			.consent-mandatory .consent-checkbox:checked {background:#8c8c8c;}
 			.consent-mandatory .consent-checkbox:checked:hover {background:#8c8c8c;}
+			.consent-form .consent-mandatory:hover {background:none;}
 
 			/* animation slide-in-blurred-top by animista */
 			.consent-slide-in {animation: slide-in-blurred-top 0.3s cubic-bezier(0.230, 1.000, 0.320, 1.000) both;}
@@ -195,7 +199,7 @@ class ConsentManager {
 			@media only screen and (min-height: 900px) {
 				@keyframes slide-in-blurred-top {
 				  0% {transform: translateY(-1000px) scaleY(2.5) scaleX(0.2); transform-origin: 50% 0%; filter: blur(40px); opacity: 0;}
-				  100% {transform: translateY(-30%) scaleY(1) scaleX(1); transform-origin: 50% 50%; filter: blur(0); opacity: 1;}
+				  100% {transform: translateY(-10%) scaleY(1) scaleX(1); transform-origin: 50% 50%; filter: blur(0); opacity: 1;}
 				}
 			}
 
