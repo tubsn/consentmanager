@@ -15,11 +15,12 @@ class ConsentManager {
 		this.consentHeadline = settings.headline || '<h3>Datenschutzeinstellungen</h3>';
 		this.consentText = settings.text || '<p>Für Ihren Kompfort und zur Verbesserung unserer Angebote nutzen wir Cookies und andere Technologien. Diese können Sie hier deaktivieren:</p>';
 		this.consentDetails = settings.details || '<small>Ihre Zustimmung können Sie jederzeit in den <a href="/datenschutz">Datenschutz</a>-Einstellungen widerrufen.</small>';
+		this.consentButtonText = settings.buttonText || 'Auswahl speichern';
 
-		let defaultFields = {
-			tracking : 'Nutzerdaten Analyse - <i>Wir möchten lernen, was Sie bei uns interessiert</i>',
-			marketing: 'Marketingdaten - <i>Helfen Sie uns relevantere Angebote zu erstellen</i>'
-		}
+		let defaultFields = [
+			{name: 'marketing', label: 'Marketingdaten - <i>Helfen Sie uns relevantere Angebote zu erstellen</i>'},
+			{name: 'tracking', label: 'Nutzerdaten Analyse - <i>Wir möchten lernen, was Sie bei uns interessiert</i>'},
+		]
 
 		this.consentFields = settings.fields || defaultFields;
 
@@ -86,25 +87,25 @@ class ConsentManager {
 		this.cookie.delete();
 	}
 
-
-
 	convert_to_form(fields) {
 
 		let htmlString = '';
 
-		for (const name in fields) {
+		fields.forEach((field) => {
 
-			let checked = this.status(name);
+			let checked = this.status(field.name);
 			if (this.firstLaunch) {checked = true;}
+			if (field.mandatory) {checked = true;}
 
 			htmlString += `
-			<label>
-				<input class="consent-checkbox" name="${name}" type="checkbox" ${checked ? 'checked' : ''}>
-				${fields[name]}
+			<label${field.mandatory ? ' class="consent-mandatory"' : ''}> 
+				<input class="consent-checkbox" name="${field.name}" type="checkbox" ${field.mandatory ? 'disabled' : ''} ${checked ? 'checked' : ''}>
+				${field.label}
 			</label>
 			`;
 
-		}
+
+		});
 
 		return htmlString;
 
@@ -156,6 +157,10 @@ class ConsentManager {
 			  100% {height: 3em; width: 3em; margin-left: -1.2em; margin-top: -1.2em; opacity: 0;}
 			}
 
+			.consent-mandatory .consent-checkbox, .consent-mandatory {cursor:default !important;}
+			.consent-mandatory .consent-checkbox:checked {background:#8c8c8c;}
+			.consent-mandatory .consent-checkbox:checked:hover {background:#8c8c8c;}
+
 			/* animation slide-in-blurred-top by animista */
 			.consent-slide-in {animation: slide-in-blurred-top 0.3s cubic-bezier(0.230, 1.000, 0.320, 1.000) both;}
 			@keyframes slide-in-blurred-top {
@@ -195,7 +200,7 @@ class ConsentManager {
 					${this.consentDetails}
 
 					<div class="consent-dialog-buttons">
-						<button class="consent-dialog-true">Speichern und schließen</button>
+						<button class="consent-dialog-true">${this.consentButtonText}</button>
 					</div>
 
 				</div>
@@ -204,14 +209,6 @@ class ConsentManager {
 
 		let checkBoxes = container.querySelectorAll('.consent-checkbox');
 
-		let _this = this;
-		checkBoxes.forEach((element) => {
-			element.onchange = function(e){
-				let name = element.getAttribute('name');
-				_this.set_consent(name, element.checked);
-			};
-		});
-
 		let button = container.querySelector('.consent-dialog-true');
 		button.addEventListener('click', (e) => {
 			this.save_status(checkBoxes);
@@ -219,7 +216,17 @@ class ConsentManager {
 			window.location.reload()
 		});
 
+
 		if (this.closeOnModalClick) {
+
+			let _this = this;
+			checkBoxes.forEach((element) => {
+				element.onchange = function(e){
+					let name = element.getAttribute('name');
+					_this.set_consent(name, element.checked);
+				};
+			});
+
 			let wrapper = container.querySelector('.consent-wrapper');
 			wrapper.addEventListener('click', (e) => {
 				if (wrapper !== e.target) return;
@@ -284,7 +291,7 @@ class FlundrCookieManager {
 			expire = ` expires=${expire};`;
 		}
 
-		let cookieString = `${this.cookieName}=${data}; SameSite=Lax;	${expire}Secure`;
+		let cookieString = `${this.cookieName}=${data}; SameSite=Lax; ${expire} ${this.secure()}`;
 		document.cookie = cookieString;
 	}
 
@@ -293,6 +300,11 @@ class FlundrCookieManager {
 			return true;
 		}
 		return false;
+	}
+
+	secure() {
+		if (location.protocol === 'https:') { return 'Secure';}
+		return '';
 	}
 
 	check_value(cookieName, cookieValue) {
@@ -312,7 +324,7 @@ class FlundrCookieManager {
 	}
 
 	delete() {
-		let cookieString = `${this.cookieName}=''; expires=Thu, 01 Jan 1970 00:00:00 GMT; Secure`;
+		let cookieString = `${this.cookieName}=''; expires=Thu, 01 Jan 1970 00:00:00 GMT; ${this.secure()}`;
 		document.cookie = cookieString;
 	}
 
