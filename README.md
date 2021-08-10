@@ -40,6 +40,8 @@ window.consentManager = new ConsentManager({
 ## Consent Layer Options
 ```html
 <button onclick="consentManager.show()">Show Consent Layer</button>
+<button onclick="consentManager.activate('marketing')">Activate and Reload Page</button>
+<button onclick="consentManager.deactivate('marketing')">Deactivate and Reload Page</button>
 <button onclick="consentManager.reset()">Delete Consent Cookies</button>
 ```
 
