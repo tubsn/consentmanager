@@ -63,12 +63,12 @@ class ConsentManager {
 	}
 
 	activate(consentType) {
-		$this.set_consent(consentType,true);
+		this.set_consent(consentType,true);
 		window.location.reload();
 	}
 
 	deactivate(consentType) {
-		$this.set_consent(consentType,false);
+		this.set_consent(consentType,false);
 		window.location.reload();
 	}
 
