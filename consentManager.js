@@ -51,11 +51,25 @@ class ConsentManager {
 	status(consentType) {
 		return this.get_consent(consentType);
 	}
+	
+	consent(consentType) {
+		return this.get_consent(consentType);
+	}
 
 	get_consent(consentType) {
 		let content = this.cookie.content;
 		if (!content) { return false;}
 		return content[consentType];
+	}
+
+	activate(consentType) {
+		$this.set_consent(consentType,true);
+		window.location.reload();
+	}
+
+	deactivate(consentType) {
+		$this.set_consent(consentType,false);
+		window.location.reload();
 	}
 
 	set_consent(consentType, value) {
