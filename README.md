@@ -12,12 +12,26 @@ window.consentManager = new ConsentManager({
 
 	headline : '<h3>New Headline</h3>',
 	text : '<p>Here you can Edit the Teasertext</p>',
+	buttonText : 'Speichern und schließen',
 
-	fields : {
-		tracking : 'Nutzerdaten Analyse - <i>Wir möchten lernen, was Sie bei uns interessiert</i>',
-		marketing: 'Marketingdaten - <i>Helfen Sie uns relevantere Angebote zu erstellen</i>',
-		externalcontent : 'Externe Inhalte - <i>z.B. Videos von Youtube</i>'
-	},
+	fields : [
+
+		{
+			name: 'marketing',
+			label: 'Marketingdaten - <i>Helfen Sie uns relevantere Angebote zu erstellen</i>',
+		},
+
+		{
+			name: 'tracking',
+			label: 'Nutzerdaten Analyse - <i>Wir möchten lernen, was Sie bei uns interessiert</i>',
+		},
+
+		{
+			name: 'mandatory',
+			label: 'Berechtigtes Interesse - <i>z.B. zum speichern des User Logins</i>',
+			mandatory : true
+		},
+	],
 
 	details: '<small>Read more in our <a target"_blank" href="/datapolicy">Datapolicy</a></small>'
 });
@@ -26,7 +40,7 @@ window.consentManager = new ConsentManager({
 ## Consent Layer Options
 ```html
 <button onclick="consentManager.show()">Show Consent Layer</button>
-<button onclick="consentManager.reset()">Delet Consent Cookies</button>
+<button onclick="consentManager.reset()">Delete Consent Cookies</button>
 ```
 
 ## Get Users Consent Status
