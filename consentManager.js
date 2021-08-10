@@ -72,6 +72,16 @@ class ConsentManager {
 		window.location.reload();
 	}
 
+	toggle(consentType) {
+		if (this.status(consentType)) {
+			this.set_consent(consentType,false);
+		}
+		else {
+			this.set_consent(consentType,true);
+		}
+		window.location.reload();
+	} 
+
 	set_consent(consentType, value) {
 		let content = this.cookie.content;
 
