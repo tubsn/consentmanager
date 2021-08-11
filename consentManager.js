@@ -43,25 +43,14 @@ class ConsentManager {
 
 	show() {this.show_consent_layer();}
 
-	show_consent_layer() {
-		let container = this.consent_modal_DOM();
-		this.body = document.querySelector('body');
-		this.body.appendChild(container);
-	}
-
-	status(consentType) {
-		return this.get_consent(consentType);
-	}
-	
-	consent(consentType) {
-		return this.get_consent(consentType);
-	}
-
 	get_consent(consentType) {
 		let content = this.cookie.content;
 		if (!content) { return false;}
 		return content[consentType];
 	}
+
+	status(consentType) {return this.get_consent(consentType);}
+	consent(consentType) {return this.get_consent(consentType);}
 
 	activate(consentType) {
 		this.set_consent(consentType,true);
@@ -74,12 +63,8 @@ class ConsentManager {
 	}
 
 	toggle(consentType) {
-		if (this.status(consentType)) {
-			this.set_consent(consentType,false);
-		}
-		else {
-			this.set_consent(consentType,true);
-		}
+		if (this.status(consentType)) {this.set_consent(consentType,false);}
+		else {this.set_consent(consentType,true);}
 		window.location.reload();
 	} 
 
@@ -96,7 +81,7 @@ class ConsentManager {
 
 	}
 
-	save_status(elements) {
+	save_modal_status(elements) {
 
 		let consent = {};
 		elements.forEach((element) => {
@@ -119,7 +104,6 @@ class ConsentManager {
 		fields.forEach((field) => {
 
 			let checked = this.status(field.name);
-			
 			if (this.firstLaunch) {checked = true;}
 			if (field.mandatory) {checked = true;}
 
@@ -129,7 +113,6 @@ class ConsentManager {
 				${field.label}
 			</label>
 			`;
-
 
 		});
 
@@ -156,7 +139,7 @@ class ConsentManager {
 
 			.consent-form {margin-bottom:1em; display:flex; flex-direction:column; align-items: start;
 			background: #dbdbdb; border-radius: .3em;}
-			.consent-form label {cursor:pointer; font-size: 1em; box-sizing: border-box; width:100%; border-bottom: 1px solid #f6f6f6; padding:0 1em .9em 3em; border-radius:.3em;}
+			.consent-form label {cursor:pointer; font-size: 1em; line-height:120%; box-sizing: border-box; width:100%; border-bottom: 1px solid #f6f6f6; padding:0 1em .9em 3em; border-radius:.3em;}
 			.consent-form label:hover {background-color:#cfd3dd;}
 			.consent-form label:last-of-type{border-bottom: none;}
 
@@ -196,6 +179,14 @@ class ConsentManager {
 			  100% {transform: translateY(0) scaleY(1) scaleX(1); transform-origin: 50% 50%; filter: blur(0); opacity: 1;}
 			}
 
+			@media only screen and (max-width: 900px) {
+				.consent-modal {max-width:100%; padding:1em; width:100%; box-shadow:none; border:none; border-radius:0;
+					font-size:1em; max-width:90%; align-self: start;}
+				.consent-wrapper {overflow:scroll}
+				.consent-slide-in {animation:none;}
+
+			}
+
 			@media only screen and (min-height: 900px) {
 				@keyframes slide-in-blurred-top {
 				  0% {transform: translateY(-1000px) scaleY(2.5) scaleX(0.2); transform-origin: 50% 0%; filter: blur(40px); opacity: 0;}
@@ -205,7 +196,6 @@ class ConsentManager {
 
 			</style>`
 	}
-
 
 	consent_modal_DOM() {
 		let container = document.createElement('div');
@@ -235,12 +225,19 @@ class ConsentManager {
 			</div>
 		`;
 
-		let checkBoxes = container.querySelectorAll('.consent-checkbox');
+		this.add_modal_events(container);
+		return container;
+	}
 
+
+	add_modal_events(container) {
+
+		let checkBoxes = container.querySelectorAll('.consent-checkbox');
 		let button = container.querySelector('.consent-dialog-true');
+
 		button.addEventListener('click', (e) => {
-			this.save_status(checkBoxes);
-			container.remove();
+			this.save_modal_status(checkBoxes);
+			this.remove_consent_layer(container);
 			window.location.reload()
 		});
 
@@ -258,13 +255,37 @@ class ConsentManager {
 			let wrapper = container.querySelector('.consent-wrapper');
 			wrapper.addEventListener('click', (e) => {
 				if (wrapper !== e.target) return;
-				this.save_status(checkBoxes);
-				container.remove();
+				this.save_modal_status(checkBoxes);
+				this.remove_consent_layer(container);
 				window.location.reload()
 			});
 		}
 
-		return container;
+	}
+
+	show_consent_layer() {
+		let modalContainer = this.consent_modal_DOM();
+		this.body = document.querySelector('body');
+		this.body.appendChild(modalContainer);
+		this.disable_page_scrolling()
+	}
+
+	remove_consent_layer(container) {
+		container.remove();
+		this.enable_page_scrolling()
+	}
+
+	disable_page_scrolling() {
+		let currentScrollDepth = window.scrollY;
+		this.body.style.position = 'fixed';
+		this.body.style.top = `-${currentScrollDepth}px`;
+	}
+
+	enable_page_scrolling() {
+		let currentScrollDepth = this.body.style.top;
+		this.body.style.position = '';
+		this.body.style.top = '';
+		window.scrollTo(0, parseInt(currentScrollDepth || '0') * -1);
 	}
 
 }
