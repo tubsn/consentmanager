@@ -181,7 +181,7 @@ class ConsentManager {
 
 			@media only screen and (max-width: 900px) {
 				.consent-modal {max-width:100%; padding:1em; width:100%; box-shadow:none; border:none; border-radius:0;
-					font-size:1em; max-width:90%; align-self: start;}
+					font-size:0.9em; line-height:120%; max-width:90%; align-self: start;}
 				.consent-wrapper {overflow:scroll}
 				.consent-slide-in {animation:none;}
 
