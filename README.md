@@ -1,7 +1,7 @@
 # flundr Consentmanager
 Small Javascript Library for DSGVO - Consent Management
 
-![ConsentManagerPreview](https://github.com/tubsn/consentmanager/raw/main/consent-preview.png)
+![ConsentManagerPreview](https://raw.githubusercontent.com/tubsn/consentmanager/main/consent-manager-preview.png)
 
 ## Start and Options
 ```javascript
