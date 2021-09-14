@@ -336,7 +336,8 @@ class FlundrCookieManager {
 
 		let expire = '';
 		if (this.expireDays) {
-			expire = this.expire_from_now(this.expireDays)
+			expire = this.expire_from_now(this.expireDays);
+			expire = new Date(expire).toUTCString();
 			expire = ` expires=${expire};`;
 		}
 
