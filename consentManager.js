@@ -341,7 +341,7 @@ class FlundrCookieManager {
 			expire = ` expires=${expire};`;
 		}
 
-		let cookieString = `${this.cookieName}=${data}; SameSite=Lax; ${expire} ${this.secure()}`;
+		let cookieString = `${this.cookieName}=${data}; SameSite=Lax; ${expire} ${this.secure()};path=/`;
 		document.cookie = cookieString;
 	}
 
